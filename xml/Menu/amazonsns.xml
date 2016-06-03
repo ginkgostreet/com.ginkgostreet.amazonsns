@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<menu>
+  <item>
+    <path>civicrm/messaging/sns/push</path>
+    <page_callback>CRM_Amazonsns_Form_Push</page_callback>
+    <title>Push</title>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
+  <item>
+    <path>civicrm/messaging/sns/settings</path>
+    <page_callback>CRM_Amazonsns_Form_Settings</page_callback>
+    <title>Amazon SNS Settings</title>
+    <access_arguments>administer CiviCRM</access_arguments>
+  </item>
+</menu>
