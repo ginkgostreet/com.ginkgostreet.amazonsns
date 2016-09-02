@@ -15,7 +15,7 @@ if (array_key_exists("SendMessage", $_POST) && $_POST['SendMessage'] == 1) {
   $title = $_POST['msg_title'];
 
 
-  if ($topic && $message) {
+  if ($topic && $message && $title) {
     $sns->publishToTopic(
       $topic,
       $sns->composeDefaultMessageStructure($message, $title),
@@ -23,9 +23,14 @@ if (array_key_exists("SendMessage", $_POST) && $_POST['SendMessage'] == 1) {
     );
 
     echo "<div class='success'>Message Sent</div>";
+    $title = $message = "";
+  } else {
+    echo "<div class='error'>All Fields are Required</div>";
   }
 
 
+} else {
+  $title = $message = "";
 }
 
 
@@ -33,11 +38,11 @@ if (array_key_exists("SendMessage", $_POST) && $_POST['SendMessage'] == 1) {
 $topics = $sns->getAllTopics();
 
 ?>
-
+<link rel="stylesheet" href="sns.css" />
 <form action="" method="post" name="Push" id="Push">
 
   <div class="section">
-    <div class="label"><label for="sns_topic">Topic</label></div>
+    <div class="label"><label for="sns_topic">Topic <span class="required">*</span></label></div>
     <div class="content">
       <select name="sns_topic" id="sns_topic" class="required">
         <?php foreach ($topics as $value => $topic) {
@@ -50,14 +55,14 @@ $topics = $sns->getAllTopics();
   </div>
 
   <div class="section">
-    <div class="label"><label for="msg_title">Title</label></div>
-    <div class="content"><input name="msg_title" type="text" id="msg_title"></div>
+    <div class="label"><label for="msg_title">Title <span class="required">*</span></label></div>
+    <div class="content"><input name="msg_title" type="text" id="msg_title" value="<?php echo $title; ?>"></div>
     <div class="clear"></div>
   </div>
 
   <div class="section">
-    <div class="label"><label for="msg_body">Message</label></div>
-    <div class="content"><textarea name="msg_body" id="msg_body" class="required"></textarea></div>
+    <div class="label"><label for="msg_body">Message <span class="required">*</span></label></div>
+    <div class="content"><textarea name="msg_body" id="msg_body" class="required"><?php echo $message; ?></textarea></div>
     <div class="clear"></div>
   </div>
 
