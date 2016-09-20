@@ -108,7 +108,7 @@ class Amazonsns_SNS_PUSH
   function composeDefaultMessageStructure($message, $subject) {
     return array(
       "default" => $message,
-      "APNS" => json_encode(array("aps" => array("alert" => $message))),
+      "APNS" => json_encode(array("aps" => array("alert" => $message, "title" => $subject))),
       "APNS_SANDBOX" => json_encode(array("aps" => array("alert" => $message))),
       "GCM" => json_encode(array(
         "data" => array("message" => $message, "title" => $subject),
