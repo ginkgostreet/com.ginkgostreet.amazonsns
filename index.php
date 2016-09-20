@@ -16,13 +16,17 @@ if (array_key_exists("SendMessage", $_POST) && $_POST['SendMessage'] == 1) {
 
 
   if ($topic && $message && $title) {
-    $sns->publishToTopic(
-      $topic,
-      $sns->composeDefaultMessageStructure($message, $title),
-      $title
-    );
+    try {
+      $sns->publishToTopic(
+        $topic,
+        $sns->composeDefaultMessageStructure($message, $title),
+        $title
+      );
 
-    echo "<div class='success'>Message Sent</div>";
+      echo "<div class='success'>Message Sent</div>";
+    } catch (Exception $e) {
+      echo "<div class='error'>Error Sending Push: ". $e->getMessage() ."</div>";
+    }
     $title = $message = "";
   } else {
     echo "<div class='error'>All Fields are Required</div>";
