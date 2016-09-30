@@ -3,6 +3,7 @@
 require_once 'config.php';
 require_once 'SNS.php';
 
+$debugging = true;
 
 $sns = new Amazonsns_SNS_PUSH();
 
@@ -17,13 +18,19 @@ if (array_key_exists("SendMessage", $_POST) && $_POST['SendMessage'] == 1) {
 
   if ($topic && $message && $title) {
     try {
-      $sns->publishToTopic(
+      $result = $sns->publishToTopic(
         $topic,
         $sns->composeDefaultMessageStructure($message, $title),
         $title
       );
 
-      echo "<div class='success'>Message Sent</div>";
+      if($debugging) {
+        echo "<div class='success'>Message Sent<br /><hr /><br />" . nl2br(str_replace(" ", "&nbsp;", print_r($result, true))) . "<hr />Topic: {$topic}<hr />Message: '{$message}' <hr />Title: '{$title}'  </div>";
+      } else {
+        echo "<div class='success'>Message Sent</div>";
+      }
+
+
     } catch (Exception $e) {
       echo "<div class='error'>Error Sending Push: ". $e->getMessage() ."</div>";
     }
