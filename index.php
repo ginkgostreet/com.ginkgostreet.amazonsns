@@ -3,7 +3,7 @@
 require_once 'config.php';
 require_once 'SNS.php';
 
-$debugging = true;
+$debugging = (array_key_exists("show_debugging", $_POST)) ? ($_POST['show_debugging'] == 1) : false;
 
 $sns = new Amazonsns_SNS_PUSH();
 
@@ -24,7 +24,7 @@ if (array_key_exists("SendMessage", $_POST) && $_POST['SendMessage'] == 1) {
 
       if($debugging) {
         $json = json_encode($composedData);
-        $jsonError = (!$json) ? json_last_error(). ": ". json_last_error_msg() : "none";
+        $jsonError = json_last_error(). ": ". json_last_error_msg();
 
         echo "<div class='success'>Message Sent<br /><hr /><br />" .
           nl2br(str_replace(" ", "&nbsp;", print_r($result, true))) .
@@ -42,7 +42,7 @@ if (array_key_exists("SendMessage", $_POST) && $_POST['SendMessage'] == 1) {
 
     } catch (Exception $e) {
       $json = json_encode($composedData);
-      $jsonError = (!$json) ? json_last_error(). ": ". json_last_error_msg() : "none";
+      $jsonError = json_last_error(). ": ". json_last_error_msg();
       echo "<div class='error'>Error Sending Push: ". $e->getMessage() .
         "<hr />Topic: {$topic}".
         "<hr />Title: '{$title}' ".
@@ -85,16 +85,26 @@ $topics = $sns->getAllTopics();
 
   <div class="section">
     <div class="label"><label for="msg_title">Title <span class="required">*</span></label></div>
-    <div class="content"><input name="msg_title" type="text" id="msg_title" value="<?php echo $title; ?>"></div>
+    <div class="content"><input name="msg_title" size="75" type="text" id="msg_title" value="<?php echo $title; ?>" /></div>
     <div class="clear"></div>
   </div>
 
   <div class="section">
     <div class="label"><label for="msg_body">Message <span class="required">*</span></label></div>
-    <div class="content"><textarea name="msg_body" id="msg_body" class="required"><?php echo $message; ?></textarea></div>
+    <div class="content"><textarea name="msg_body" id="msg_body" class="required" cols="70" rows="10"><?php echo $message; ?></textarea></div>
     <div class="clear"></div>
   </div>
 
+  <br />
+  <div class="section">
+    <div class="content">
+      <input name="show_debugging" type="checkbox" id="show_debugging" value="1" <?php echo $debugging ? "checked" : ""; ?> />
+      <label for="show_debugging">Display Debugging Info</label>
+    </div>
+    <div class="clear"></div>
+  </div>
+
+  <br />
   <input name="SendMessage" value="1" type="hidden" />
   <div class="section"><input value="Send Message" type="submit" /></div>
 
